@@ -1,0 +1,105 @@
+{
+  "phase": "R97W_ECSG_FORGETTING_RATCHET_R0",
+  "version": "0",
+  "research_question": "Can repeated prior task learning with explicit erasure of episode-fast weights improve ECS_G held-out adaptation to unseen associations, beyond cold and shuffled-history controls, and relative to a matched FFN?",
+  "interpretation_guard": "Tests explicit first-order Reptile meta-learning with fast-parameter reset, not spontaneous Levin-style causal emergence or self-improving general intelligence. A forgetting probe shows loss of previously fitted task performance, not full information-theoretic erasure.",
+  "authority": {
+    "e0_module_rel": "src/cgc/ecsg_e0.py",
+    "e0_sha256": "92c987e0fb54d80193fd60ecc9a3e31088f0f9b7cd2cfe8e08c4636a198d7084",
+    "parents": [
+      {
+        "id": "R97O",
+        "sha256": "edc2aebc97de29d8fc6208eceee725643f4aaca5f44f3e6a5e8ad09743824207"
+      },
+      {
+        "id": "R97Q",
+        "sha256": "65b688b1cea063b94fdcb706911a4a6be7d94506797f8ed3d220ac360787a7d7"
+      },
+      {
+        "id": "R97V",
+        "sha256": "cdf3e5cf0f7ac87e60b9439e7a8a9e3921097cc3c3447d7484434739e6fa7c0e"
+      }
+    ]
+  },
+  "families": [
+    "smooth",
+    "conditional"
+  ],
+  "seeds": [
+    17,
+    83
+  ],
+  "architecture": {
+    "features": 4,
+    "outputs": 3,
+    "micro_units": 8,
+    "ffn_width": 13,
+    "precision": "float64",
+    "ecs_trainable_params": 120,
+    "ffn_trainable_params": 120
+  },
+  "protocol": {
+    "train_episodes": 64,
+    "dev_episodes": 5,
+    "test_episodes": 12,
+    "support": 32,
+    "query": 48,
+    "ood": 32,
+    "inner_steps": 8,
+    "inner_lr": 0.08,
+    "outer_interpolation": 0.28,
+    "dev_checkpoints": [
+      0,
+      16,
+      32,
+      64
+    ],
+    "eval_steps": [
+      0,
+      1,
+      2,
+      4,
+      8
+    ],
+    "forget_probe_episodes": 8,
+    "progress_every": 16,
+    "gradient_clip_l2": 2.0,
+    "dev_namespace": "DEV",
+    "train_namespace": "TRAIN",
+    "test_namespace": "TEST_R97W_FINAL_BLIND"
+  },
+  "qualification": {
+    "max_geomean_meta_vs_cold": 0.95,
+    "min_paired_positive_fraction": 0.6666666666666666,
+    "max_auc_ratio": 0.95,
+    "min_old_reset_to_fast_loss_ratio": 1.1,
+    "max_ecs_to_ffn_ratio": 1.0,
+    "require_all_families_all_seeds": true,
+    "comparison_policy": "Primary bounded retained learning utility is evaluated within ECS. FFN comparative superiority is reported independently."
+  },
+  "controls": {
+    "ECS_COLD": "Always reset to initial ECS parameters; no across-episode slow changes",
+    "ECS_META": "Fast inner SGD, slow first-order Reptile across TRAIN episodes, reset fast weights after every episode",
+    "ECS_SHUFFLED": "Same Reptile but shuffled training support-target pairing for the slow state",
+    "ECS_CONTINUAL": "Continuous adaptation to TRAIN episodes without erasing task-specific fast weights",
+    "FFN_META": "120-parameter matched GELU FFN under identical episode protocol and Reptile update",
+    "FFN_COLD": "Same 120-parameter FFN without across-episode update",
+    "FORGET_PROBE": "Previously trained task query error before vs after fast reset into slow state"
+  },
+  "scope": {
+    "no_native_state_claim": true,
+    "no_causal_emergence_claim": true,
+    "no_memory_erasure_proof": true,
+    "no_nvme_or_mos": true,
+    "no_deepseek_change": true,
+    "no_gpu": true,
+    "no_test_reuse": true
+  },
+  "portability": {
+    "type": "DERIVED_PORTABLE_SPEC_NOT_FROZEN_ORIGINAL",
+    "original_spec_sha256": "531ab08da88bdb0f872e828b17be05ac4dca570580e22560f350fc8aa1671784",
+    "original_experiment_sha256": "219898f80448962d3a1952dc5a2d4ba381b3bd4260efdf777b985b50333e080a",
+    "historical_parents": "Recorded identifiers and hashes only; not reattested in this package.",
+    "numerical_protocol": "Retained from reviewed R97W source; only authority/output handling adapted."
+  }
+}
