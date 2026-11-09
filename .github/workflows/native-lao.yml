@@ -1,0 +1,44 @@
+name: Native CGC + LAO
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    name: "${{ matrix.compiler }} / ${{ matrix.variant }}"
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - compiler: gcc
+            variant: debug
+            flags: "-Wall -Wextra -Werror"
+            sanitized: "OFF"
+          - compiler: clang
+            variant: debug
+            flags: "-Wall -Wextra -Werror"
+            sanitized: "OFF"
+          - compiler: gcc
+            variant: asan-ubsan
+            flags: "-Wall -Wextra -Werror -fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer"
+            sanitized: "ON"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify upstream copied sources
+        run: sha256sum -c native/LAO/SOURCE_SHA256SUMS.txt
+      - name: Configure
+        run: >-
+          cmake -S . -B "${{ runner.temp }}/cgc-lao-build"
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_C_COMPILER=${{ matrix.compiler }}
+          -DCMAKE_C_FLAGS="${{ matrix.flags }}"
+          -DBUILD_TESTING=ON
+          -DCGC_LAO_SANITIZED=${{ matrix.sanitized }}
+      - name: Build
+        run: cmake --build "${{ runner.temp }}/cgc-lao-build" --parallel 2
+      - name: Test
+        run: ctest --test-dir "${{ runner.temp }}/cgc-lao-build" --output-on-failure
