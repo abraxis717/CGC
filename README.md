@@ -187,6 +187,19 @@ Current research directions include geometric transformations inside neural expe
 
 The core itself does not use attention or maintain a KV cache. Whether CGC can replace FFN sublayers in production transformers, or contribute to alternative attention and memory architectures, requires further model-level evaluation.
 
+## LAO: optional research learning components
+
+CGC provides two independently tested C11 research learning companions under
+[`native/LAO/`](native/LAO/README.md): the bounded **RMF3** feedback reliability
+learner and **RRMF3_M**, its relational extension. On synthetic RLB1, relational
+coupling improved held-out compositional regret relative to independent filters
+with the same readout by −0.000255 (95% CI [−0.000280, −0.000231]).
+
+This portability integration leaves the original 120-parameter geometric
+operator unchanged. It does not demonstrate joint CGC+LAO model improvement,
+certify a real measurement provider, or authorize production inference. See
+[research provenance and nonclaims](docs/research/LAO_PORTABILITY.md).
+
 ## 6. Provenance and license
 
 The original E0 PyTorch implementation is preserved under:
